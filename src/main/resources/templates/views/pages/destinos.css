@@ -1,0 +1,53 @@
+.navbar{
+    background-color: #F6DE00;
+}
+.teste{
+    border: solid;
+    background-color: #F6DE00;
+    opacity: 80%;
+    height: 400px;
+    width: 50%;
+    margin-top: 10px;
+    position: relative;
+    left: 30px;
+}
+.teste2{
+    border: solid;
+    background-color:  #F6DE00;
+    height: 30%;
+    width: 30%;
+    margin-top: 60px;
+    position: relative;
+    right: 40px;
+}
+img{
+    width: 100%;
+    
+}
+#logotipo{
+    width:5%;
+}
+
+
+.sobre{
+    height: 600px;
+    margin-top: 60px;
+}
+footer{
+    background-color: #F6DE00;
+    height: 150px;
+}
+body{
+    font-family: sans-serif;
+}
+div #iconesrs{
+    
+    width: 100%;
+
+}
+
+footer section{
+
+    margin-top: 20px;
+    align-items:end;
+}

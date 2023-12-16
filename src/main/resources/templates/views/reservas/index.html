@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="icon" href="./assets/img/book-2-fill.svg" type="image/svg" />
+	<link rel="stylesheet" href="./assets/css/style.css" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+	<title>RecordeTur | reservas</title>
+</head>
+
+<body>
+	<main>
+		<header class="header">
+			<h1>Reservas</h1>
+		</header>
+
+		<ul class="nav justify-content-center">
+			<li class="nav-item">
+				<a class="nav-link active" aria-current="page" href="">Home</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/clientes}">Clientes</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/viagens}">Destinos</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/reservas}">Reservas</a>
+			</li>
+		</ul>
+
+		<section class="container">
+
+			<div class="p-4">
+				<button data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-primary mb-2 botao1"> Nova
+					reserva </button>
+
+				<table class="table table-responsive table-hover">
+					<thead class="table-dark">
+						<tr>
+							<th scope="col">id</th>
+							<th scope="col">data da reserva</th>
+							<th scope="col">Valor</th>
+							<th scope="col">Id cliente</th>
+							<th scope="col">Nome Cliente</th>
+							<th scope="col">Destino</th>
+							<th scope="col">Ações</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="r : ${reservas}">
+							<td th:text="${r.id_reserva}"></td>
+								<td  th:text="${r.data_reserva}"></td>
+								<td  th:text="${r.valor_reserva}"></td>
+								<td  th:text="${r.cliente.id_cliente}"></td>
+								<td  th:text="${r.cliente.nome_cliente}"></td>
+								<td  th:text="${r.viagem.destino}"></td>
+							<td>
+								<div class="d-flex">
+									<a th:href="@{'/reservas' + ${r.id_reserva}}" data-bs-toggle="modal"
+										th:data-bs-target="'#exampleModal' + ${r.id_reserva}" class="mx-1" title="Editar">
+										<i class="ri-file-edit-line"></i>
+									</a>
+									<a th:href="@{'/reservas/' + ${r.id_reserva} + '/excluir'}" class="mx-1" title="Deletar"
+										onclick="return confirm('Deseja excluir esta reserva ?')">
+										<i class="ri-delete-bin-2-line"></i>
+									</a>
+									
+									
+									<!-- Modal - Formulário de editar -->
+									<div class="modal fade" th:id="'exampleModal' + ${r.id_reserva}" tabindex="-1"
+										aria-labelledby="exampleModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<div class="modal-header">
+													<h1 class="modal-title fs-5" id="exampleModalLabel">Modal
+														title</h1>
+													<button type="button" class="btn-close" data-bs-dismiss="modal"
+														aria-label="Close"></button>
+												</div>
+												<div class="modal-body">
+													<form th:action="@{/reservas/cadastrar}" method="post"
+														th:object="${reserva}">
+														<h2 class="text-center">Criar</h2>
+														<input type="hidden" id="id_reserva" name="id_reserva" class="form-control"
+															th:value="${r.id_reserva}" />
+														<div class="form-group mb-3">
+															<label for="data_reserva" class="form-label"> Data </label> <input
+																type="text" id="data_reserva" name="data_reserva"  class="form-control" th:value="${r.data_reserva}" />
+														</div>
+
+														<div class="form-group mb-3">
+															<label for="cliente" class="form-label"> Cliente </label> 
+															<select id="id_cliente" name="cliente.id_cliente"  class="form-control">
+																<option th:value="${r.cliente.id_cliente}" th:text="${r.cliente.nome_cliente}"></option>
+																
+																	<option th:each="c : ${clientes}" th:value="${c.id_cliente}" th:text="${c.nome_cliente}" ></option>
+																
+															</select>
+														</div>
+														<div class="form-group mb-3">
+															<label for="viagem" class="form-label"> Viagem </label> 
+															<select id="viagem" name="viagem.id_viagem"class="form-control">
+																<option th:value="${r.viagem.id_viagem}" th:text="${r.viagem.destino}"></option>
+																
+																	<option th:each="v : ${viagens}" th:value="${v.id_viagem}" th:text="${v.destino}"></option>
+																
+															</select>
+														</div>
+														<div class="form-group mb-3">
+															<label for="valor_reserva" class="form-label"> Valor </label> <input
+																type="text" id="valor_reserva" name="valor_reserva"  class="form-control" th:value="${r.valor_reserva}" />
+														</div>
+														
+														<button type="submit" class="btn btn-primary">Enviar</button>
+														<a href="./reservas" class="btn btn-danger"
+															style="margin-left: 10px"> Cancelar </a>
+													</form>
+												</div>
+
+											</div>
+										</div>
+									</div>
+
+								</div>
+							</td>
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+
+
+
+
+		<!-- Modal - Formulário cadastrar -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="exampleModalLabel">Modal
+							title</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form th:action="@{/reservas/cadastrar}" method="post" th:object="${reserva}">
+							<h2 class="text-center">Criar</h2>
+							<div class="form-group mb-3">
+								<label for="data" class="form-label"> Data </label> <input
+									type="text" id="data_reserva" name="data_reserva"  class="form-control" value="" />
+							</div>
+
+							<div class="form-group mb-3">
+								<label for="cliente" class="form-label"> Cliente </label> 
+								<select id="id_cliente" name="cliente.id_cliente"  class="form-control">
+									<option value="DEFAULT">Escolha o cliente</option>
+									
+										<option th:each="c : ${clientes}" th:value="${c.id_cliente}" th:text="${c.nome_cliente}" ></option>
+									
+								</select>
+							</div>
+							<div class="form-group mb-3">
+								<label for="viagem" class="form-label"> Viagem </label> 
+								<select id="id_viagem" name="viagem.id_viagem"class="form-control">
+									<option value="DEFAULT">Escolha um destino</option>
+									
+										<option th:each="v : ${viagens}" th:value="${v.id_viagem}" th:text="${v.destino}"></option>
+									
+								</select>
+							</div>
+							<div class="form-group mb-3">
+								<label for="valor_reserva" class="form-label"> Valor da reserva </label> <input
+									type="text" id="valor_reserva" name="valor_reserva"  class="form-control" value="" />
+							</div>
+							
+							<button type="submit" class="btn btn-primary">Enviar</button>
+							<a href="./reservas" class="btn btn-danger"
+								style="margin-left: 10px"> Cancelar </a>
+						</form>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</main>
+	<footer class="container-fluid position-absolute bottom-0 start-0 end-0">
+		<img src="./assets/img/recode.svg" alt="recodePro" />
+	</footer>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
